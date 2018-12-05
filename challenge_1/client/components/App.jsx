@@ -1,12 +1,12 @@
 import React from 'react';
-import QueryResults from './queryResults.jsx';
+import QueryResults from './QueryResults.jsx';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       keyword: '',
-      results: '',
+      results: [],
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
