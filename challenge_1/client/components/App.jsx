@@ -1,12 +1,12 @@
 import React from 'react';
-import Results from './Results.jsx';
+import QueryResults from './queryResults.jsx';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       keyword: '',
-      searchResults: '',
+      results: '',
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -22,20 +22,19 @@ class App extends React.Component {
   async handleSubmit(e) {
     e.preventDefault();
     try {
-      const results = await fetch(`/events?q=${this.state.keyword}`);
-      if (results.ok) {
-        const data = await results.json();
+      const response = await fetch(`/events?q=${this.state.keyword}`);
+      if (response.ok) {
+        const results = await response.json();
         this.setState({
           keyword: '',
-          searchResults: data,
+          results,
         });
       } else {
-        throw new Error(results);
+        throw new Error(response);
       }
-    } catch(err) {
-
+    } catch (err) {
+      console.log(err);
     }
-
   }
 
   render() {
@@ -49,6 +48,7 @@ class App extends React.Component {
           </label>
           <button type="submit">Search</button>
         </form>
+        <QueryResults results={ this.state.results }/>
       </div>
     );
   }
