@@ -13,7 +13,7 @@ app.use('/', express.static(path.join(__dirname, '../public')));
 
 app.get('/btc', async (req, res) => {
   try {
-    const btcPrices = await axios.get('https://api.coindesk.com/v1/bpi/historical/close.json?start=2018-01-01&end=2018-12-06');
+    const btcPrices = await axios.get('https://api.coindesk.com/v1/bpi/historical/close.json?start=2018-11-01&end=2018-12-06');
     res.send(btcPrices.data.bpi);
   } catch (err) {
     console.log('COINDESK API ERROR: ', err);
