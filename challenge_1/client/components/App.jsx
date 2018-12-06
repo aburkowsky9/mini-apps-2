@@ -10,11 +10,14 @@ class App extends React.Component {
       currentKeyword: '',
       results: [],
       pageCount: 0,
+      offset: 0,
+      isCurrentlyEditing: null,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handlePageClick = this.handlePageClick.bind(this);
     this.handlePageChange = this.handlePageChange.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
   }
 
   handleChange({ target: { name, value } }) {
@@ -48,9 +51,10 @@ class App extends React.Component {
     }
   }
 
-  async handlePageChange(offset) {
+  async handlePageChange() {
+    const { currentKeyword, offset } = this.state;
     try {
-      const response = await fetch(`/events?_page=${offset}&_limit=10&q=${this.state.currentKeyword}`);
+      const response = await fetch(`/events?_page=${offset}&_limit=10&q=${currentKeyword}`);
       if (response.ok) {
         const results = await response.json();
         this.setState({
@@ -67,7 +71,19 @@ class App extends React.Component {
   handlePageClick(page) {
     // page index starts at 0
     const offset = page.selected + 1;
-    this.handlePageChange(offset);
+    this.setState({ offset }, () => {
+      this.handlePageChange();
+    });
+  }
+
+  handleEdit(index) {
+    this.setState({
+      itemCurrentlyEditing: index,
+    });
+  }
+
+  handleEditSave(index) {
+    const data = this.state.results;
   }
 
   render() {
@@ -81,7 +97,9 @@ class App extends React.Component {
           </label>
           <button type="submit">Search</button>
         </form>
-        <QueryResults results={this.state.results}/>
+        <QueryResults results={this.state.results}
+          handleEdit={this.handleEdit}
+          itemCurrentlyEditing={this.state.itemCurrentlyEditing}/>
         {this.state.pageCount > 0
          && <div className='paginationBox'>
               <ReactPaginate
