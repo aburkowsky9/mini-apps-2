@@ -1,0 +1,43 @@
+{
+  "name": "mini_app_2",
+  "version": "1.0.0",
+  "description": "Cryptocurrency Charting Tool",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "nodemon server/server.js",
+    "build-dev": "webpack -d --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alex Burkowsky",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@babel/core": "^7.1.6",
+    "@babel/preset-env": "^7.1.6",
+    "@babel/preset-react": "^7.0.0",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.4",
+    "eslint": "^5.9.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-react": "^7.11.1",
+    "webpack": "^4.26.1",
+    "webpack-cli": "^3.1.2"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.0.0",
+    "express": "^4.16.4",
+    "nodemon": "^1.18.7",
+    "path": "^0.12.7",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aburkowsky9/hrsf104-mini-apps-2.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aburkowsky9/hrsf104-mini-apps-2/issues"
+  },
+  "homepage": "https://github.com/aburkowsky9/hrsf104-mini-apps-2#readme"
+}
