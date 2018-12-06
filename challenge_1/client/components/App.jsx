@@ -7,12 +7,14 @@ class App extends React.Component {
     super(props);
     this.state = {
       keyword: '',
+      currentKeyword: '',
       results: [],
       pageCount: 0,
-      currPage: 1,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handlePageClick = this.handlePageClick.bind(this);
+    this.handlePageChange = this.handlePageChange.bind(this);
   }
 
   handleChange({ target: { name, value } }) {
@@ -25,13 +27,16 @@ class App extends React.Component {
   async handleSubmit(e) {
     e.preventDefault();
     try {
-      // for json-server pagination: &_page=1&_limit=10
-      const response = await fetch(`/events?q=${this.state.keyword}`);
+      const response = await fetch(`/events?_start=0&_limit=10&q=${this.state.keyword}`);
+      // copy of keyword used for pagination and not linked to searchbar value
+      const currentKeyword = this.state.keyword;
       if (response.ok) {
         const results = await response.json();
-        const pageCount = Math.ceil(results.length / 10);
+        const totalResultsLength = response.headers.get('X-Total-Count');
+        const pageCount = Math.ceil(totalResultsLength / 10);
         this.setState({
           keyword: '',
+          currentKeyword,
           results,
           pageCount,
         });
@@ -43,8 +48,26 @@ class App extends React.Component {
     }
   }
 
-  handlePageClick(e) {
-    console.log(e.target.value);
+  async handlePageChange(offset) {
+    try {
+      const response = await fetch(`/events?_page=${offset}&_limit=10&q=${this.state.currentKeyword}`);
+      if (response.ok) {
+        const results = await response.json();
+        this.setState({
+          results,
+        });
+      } else {
+        throw new Error(response);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  handlePageClick(page) {
+    // page index starts at 0
+    const offset = page.selected + 1;
+    this.handlePageChange(offset);
   }
 
   render() {
