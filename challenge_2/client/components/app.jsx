@@ -8,16 +8,27 @@ class App extends React.Component {
     this.state = {
       cryptoPriceData: {},
       errorFetching: false,
+      graphType: 'line',
     };
     this.fetchCryptoData = this.fetchCryptoData.bind(this);
+    this.handleGraphTypeChange = this.handleGraphTypeChange.bind(this);
+  }
+
+  handleGraphTypeChange({ target: { value } }) {
+    this.setState({ graphType: value }, () => {
+      this.renderChart();
+    });
   }
 
   renderChart() {
     const { node } = this;
     const dates = Object.keys(this.state.cryptoPriceData);
     const values = Object.values(this.state.cryptoPriceData);
+    if (window.chart) {
+      window.chart.destroy();
+    }
     window.chart = new Chart(node, {
-      type: 'line',
+      type: this.state.graphType,
       data: {
         labels: dates,
         datasets: [
@@ -56,19 +67,20 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="chartContainer">
         <h1>Cryptocurrency Charting Tool</h1>
+        <div className="chart">
         {this.state.errorFetching
-          ? <p>Sorry! There was an error processing your request. Please try again. </p>
+          ? <p> Sorry! There was an error processing your request. Please try again. </p>
           : <canvas
-              style={{ width: 800, height: 300 }}
               ref={(node) => { this.node = node; }}
               />
         }
-        <UserOptions />
+        </div>
+        <UserOptions handleGraphTypeChange={this.handleGraphTypeChange}/>
       </div>
     );
   }
 }
-
+// style={{ width: 500, height: 300 }}
 export default App;
